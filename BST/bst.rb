@@ -54,12 +54,71 @@ class Tree
       return node
     end
 
-    def delete(node=@root,key)
-      
+    def delete(root=@root, k)
+      # Base case
+      if root.nil?
+        return root
+      end
+    
+      # Recursive calls for ancestors of
+      # node to be deleted
+
+      if root.val > k
+        root.left = delete(root.left, k)
+        return root
+      elsif root.val < k
+        root.right = delete(root.right, k)
+        return root
+      end
+    
+      # We reach here when root is the node
+      # to be deleted.
+    
+      # If one of the children is empty
+      if root.left.nil?
+        temp = root.right
+        root = nil
+        return temp
+      elsif root.right.nil?
+        temp = root.left
+        root = nil
+        return temp
+      end
+    
+      # If both children exist
+    
+      succ_parent = root
+    
+      # Find successor
+      succ = root.right
+      while !succ.left.nil?
+        succ_parent = succ
+        succ = succ.left
+      end
+    
+      # Delete successor. Since successor
+      # is always left child of its parent
+      # we can safely make successor's right
+      # right child as left of its parent.
+      # If there is no succ, then assign
+      # succ.right to succ_parent.right
+      if succ_parent != root
+        succ_parent.left = succ.right
+      else
+        succ_parent.right = succ.right
+      end
+    
+      # Copy Successor Data to root
+      root.key = succ.key
+    
+      # Delete Successor and return root
+      succ = nil
+      return root
     end
 
 end
 
 bst=Tree.new([1,2,3,4,5,6,7])
 bst.insert(5)
+bst.delete(3)
 bst.pretty_print
