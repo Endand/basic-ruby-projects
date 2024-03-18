@@ -128,10 +128,90 @@ class Tree
       end
     end
 
+   def level_order
+      queue=[@root]
+      result=[]
+      
+      until queue.empty?
+         pop=queue.shift
+         result << pop.val
+         yield pop if block_given?
+         queue << pop.left unless pop.left.nil?
+         queue << pop.right unless pop.right.nil?
+      end
+      result
+   end
+
+   def inorder(root=@root)
+      return if root.nil?
+
+      result=[]
+
+      result.concat(inorder(root.left)) unless root.left.nil?
+      yield root if block_given?
+      result << root.val
+      result.concat(inorder(root.right)) unless root.right.nil?
+
+      block_given? ? nil : result
+   end
+   def inorder(root=@root)
+      return if root.nil?
+
+      result=[]
+
+      result.concat(inorder(root.left)) unless root.left.nil?
+      yield root if block_given?
+      result << root.val
+      result.concat(inorder(root.right)) unless root.right.nil?
+
+      block_given? ? nil : result
+   end
+
+   def postorder(root=@root)
+      return if root.nil?
+
+      result=[]
+
+      
+      result.concat(postorder(root.left)) unless root.left.nil?   
+      result.concat(postorder(root.right)) unless root.right.nil?
+      yield root if block_given?
+      result << root.val
+
+      block_given? ? nil : result
+   end
+
+   def height(node)
+      return 0 if node.nil? || (node.left.nil? && node.right.nil?)
+      left_height=height(node.left)
+      right_height=height(node.right)
+   
+      1 + [left_height,right_height].max
+   end
+
+   def depth(node)
+      return 0 if node==@root ||node.nil?
+
+      1 + [depth(node.left),depth(node.right)].max
+
+   end
+
+   def balanced(node=@root)
+      return true if node.nil? 
+
+      left=height(node.left)
+      right=height(node.right)
+
+      return false if (left-right).abs > 1
+
+      balanced(node.left) || balanced(node.right)
+
+   end
 end
 
 bst=Tree.new([1,2,3,4,5,6,7])
-bst.insert(5)
-bst.delete(3)
+bst.insert(8)
+
 bst.pretty_print
-p bst.find(6)
+bst.inorder
+p bst.balanced
