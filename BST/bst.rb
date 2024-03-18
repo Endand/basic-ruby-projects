@@ -207,11 +207,19 @@ class Tree
       balanced(node.left) || balanced(node.right)
 
    end
+
+   def rebalance
+      tree=level_order
+      @root=build_tree(tree)
+   end
 end
 
 bst=Tree.new([1,2,3,4,5,6,7])
 bst.insert(8)
-
+bst.insert(9)
 bst.pretty_print
 bst.inorder
+p bst.balanced
+bst.rebalance
+bst.pretty_print
 p bst.balanced
