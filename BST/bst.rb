@@ -1,9 +1,11 @@
 module Comparable
-   def compare(node)
-      if self.val > node.val
+   def compare(val)
+      if self.val > val
          return -1
-      else
+      elsif self.val <= val
          return 1
+      else
+         return 0
       end
    end
 end
@@ -38,7 +40,26 @@ class Tree
       puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.val}"
       pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
     end
+
+    def insert(node=@root,key)
+      return Node.new(key) if node.nil?
+      compare_val=node.compare(key)
+      if  compare_val== 0
+         return node
+      elsif compare_val==1
+         node.right=insert(node.right,key)
+      else
+         node.left=insert(node.left,key)
+      end
+      return node
+    end
+
+    def delete(node=@root,key)
+      
+    end
+
 end
 
 bst=Tree.new([1,2,3,4,5,6,7])
+bst.insert(5)
 bst.pretty_print
