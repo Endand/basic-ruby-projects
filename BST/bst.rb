@@ -116,9 +116,22 @@ class Tree
       return root
     end
 
+    def find(root=@root,key)
+      return if root.nil?
+
+      return root if root.val==key
+      case root.compare(key)
+      when 1
+         return find(root.right,key)
+      when -1 
+         return find(root.left,key)
+      end
+    end
+
 end
 
 bst=Tree.new([1,2,3,4,5,6,7])
 bst.insert(5)
 bst.delete(3)
 bst.pretty_print
+p bst.find(6)
